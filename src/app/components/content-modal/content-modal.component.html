@@ -1,0 +1,24 @@
+<div class="modal"
+#modal
+[style.zIndex]="zIndex"
+(mousedown)="onModalMouseDown()"
+[style.left]="initialLeft"
+[style.top]="initialTop"
+[style.width.px]="width"
+[style.height.px]="height"> <!-- Changed (mousedown) on modal itself -->
+  <div class="header" (mousedown)="startDrag($event)"> <!-- mousedown here specifically for drag -->
+    <span>{{ title }}</span>
+    <div class="window-controls">
+      <button (click)="onMinimize($event)">🗕</button>
+      <button *ngIf="!isMaximized" (click)="onMaximize($event)">🗖</button>
+      <button *ngIf="isMaximized" (click)="onRestore($event)">❐</button>
+      <div class="crossBtn"><button (click)="onCloseClick($event)">✖</button></div>
+    </div> <!-- Pass $event to stopPropagation -->
+  </div>
+  <div class="body" >
+    <ngx-monaco-editor [options]="editorOptions" [(ngModel)]="content" [style.height.px]="height-50" [style.width.px]="width" (onInit)="onEditorInit($event)"></ngx-monaco-editor>
+
+  </div>
+
+  <div class="resize-handle" (mousedown)="startResize($event)"></div>
+</div>

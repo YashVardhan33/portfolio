@@ -1,0 +1,20 @@
+<div class="taskbar">
+  <div class="start-button" (click)="toggleStartMenu()">
+    <mat-icon>apps</mat-icon>
+    Start
+  </div>
+
+  <div class="open-apps">
+      <button *ngFor="let win of openWindows" (click)="onAppClick(win.id)" class="taskbar-icon">{{win.title}}</button>
+  </div>
+
+  <div class="status-area">
+    <mat-icon class="icon">wifi</mat-icon>
+    <span>{{time}}
+      <!-- <div>{{time}}</div> -->
+      <div>{{date}}</div>
+    </span>
+  </div>
+
+</div>
+<app-start-menu *ngIf="showStartMenu" (shutdown)="handleShutdown()"></app-start-menu>
