@@ -27,10 +27,14 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               {
+
                 "glob": "**/*",
                 "input": "node_modules/monaco-editor",
                 "output": "assets/monaco-editor"
-              }
+              },
+              "src/assets",
+              "src/favicon.ico"
+
             ],
             "styles": [
               "@angular/material/prebuilt-themes/magenta-violet.css",

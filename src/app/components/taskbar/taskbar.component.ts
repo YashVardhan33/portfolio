@@ -9,7 +9,7 @@ import { StartMenuComponent } from "../start-menu/start-menu.component";
   styleUrl: './taskbar.component.scss'
 })
 export class TaskbarComponent {
-  @Input() openWindows: {id: number; title: string; }[] = [];
+  @Input() openWindows: {id: number; title: string; iconUrl?:string}[] = [];
   @Output() openWindow = new EventEmitter<number>();
   @Output() startClicked = new EventEmitter<number>();
 

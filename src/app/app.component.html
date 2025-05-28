@@ -1,7 +1,7 @@
 <div  class="desktop">
-  <app-desktop-icon [label]="'AboutMe.md'" [icon]="'description'" [onDoubleClick]="handleAboutMeDoubleClick"></app-desktop-icon>
+  <app-desktop-icon [label]="'AboutMe.md'" [icon]="'assets/icons/md.svg'" [onDoubleClick]="handleAboutMeDoubleClick"></app-desktop-icon>
 
-  <app-desktop-icon [label]="'Projects.json'" [icon]="'code'" [onDoubleClick]="handleProjectsDoubleClick"></app-desktop-icon>
+  <app-desktop-icon [label]="'Projects.json'" [icon]="'assets/icons/json.svg'" [onDoubleClick]="handleProjectsDoubleClick"></app-desktop-icon>
 
 </div>
 <<ng-container *ngFor="let win of windowManager.windows$|async">

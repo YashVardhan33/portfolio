@@ -7,6 +7,7 @@ interface OpenWindow{
   content: string;
   zIndex: number;
   isMinimized: boolean;
+  iconUrl?: string;
 }
 
 
@@ -20,7 +21,7 @@ export class WindowManagerService {
     private windowsSubject = new BehaviorSubject<OpenWindow[]>([]);
     windows$ = this.windowsSubject.asObservable();
 
-    openWindow(title: string, filename: string, content: string){
+    openWindow(title: string, filename: string, content: string,iconUrl: string = 'assets/icons/file.svg'){
       const newWindow: OpenWindow = {
         id: this.nextId++,
         title,
@@ -28,6 +29,7 @@ export class WindowManagerService {
         content,
         zIndex: this.zCounter++,
         isMinimized : false,
+        iconUrl,
       };
 
       this.windows.push(newWindow);

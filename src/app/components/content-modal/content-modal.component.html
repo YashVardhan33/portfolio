@@ -1,5 +1,9 @@
 <div class="modal"
+
 #modal
+[@modalAnimation]
+[@minimizeAnimation]="isMinimized?'minimized':'open'"
+[@maximizeAnimation]="isMaximized?'maximized':'normal'"
 [style.zIndex]="zIndex"
 (mousedown)="onModalMouseDown()"
 [style.left]="initialLeft"

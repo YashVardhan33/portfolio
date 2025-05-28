@@ -1,13 +1,15 @@
 <div class="taskbar">
   <div class="start-button" (click)="toggleStartMenu()">
-    <mat-icon><img [src]="startIconUrl" class="icon"/></mat-icon>
+    <img [src]="startIconUrl" class="icon"/>
 
-    <mat-icon>windows</mat-icon>
+    <!-- <mat-icon>windows</mat-icon> -->
     Start
   </div>
 
   <div class="open-apps">
-      <button *ngFor="let win of openWindows" (click)="onAppClick(win.id)" class="taskbar-icon">{{win.title}}</button>
+      <button *ngFor="let win of openWindows" (click)="onAppClick(win.id)" class="taskbar-icon">
+        <img [src]="win.iconUrl || 'assets/icons/file.svg'" class="file-icon" />
+        </button>
   </div>
 
   <div class="status-area">

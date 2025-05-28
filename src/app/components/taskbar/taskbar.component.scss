@@ -25,8 +25,8 @@
     font-size: 20px;
   }
   .icon{
-    width: 20px;
-    height: 20px;
+    width: 25px;
+    height: 25px;
     object-fit: contain;
   }
 }
@@ -45,6 +45,18 @@
 
       &:hover{
         background-color: #555;
+      }
+
+      .file-icon{
+        width: 24px;
+        height: 24px;
+        margin-right: 0px;
+        object-fit: contain;
+
+        &:hover{
+        background-color: #555;
+      }
+
       }
     }
 }

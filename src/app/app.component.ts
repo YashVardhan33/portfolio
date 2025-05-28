@@ -24,8 +24,9 @@ toggleStartMenu() {
 
 
   openWindow(fileName: string): void{
+    const icon = this.getIconForFile(fileName);
     const dummyContent = `# ${fileName}\n\nThis is content loaded for "${fileName}"\nMore text here...`;
-    this.windowManager.openWindow(fileName, fileName, dummyContent);
+    this.windowManager.openWindow(fileName, fileName, dummyContent,icon);
     console.log('Open file: ', fileName);
   }
 
@@ -62,6 +63,18 @@ handleRestore(id: number){
 
   }
 }
+
+getIconForFile(fileName: string): string {
+  const ext = fileName.split('.').pop()?.toLowerCase();
+  switch (ext) {
+    case 'md': return 'assets/icons/md.svg';
+    case 'json': return 'assets/icons/json.svg';
+    case 'java': return 'assets/icons/java.svg';
+    case 'txt': return 'assets/icons/txt.svg';
+    default: return 'assets/file-icons/file.svg';
+  }
+}
+
 
 
   ngOnInit(): void {

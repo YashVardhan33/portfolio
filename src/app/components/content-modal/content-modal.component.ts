@@ -1,3 +1,10 @@
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger
+} from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, inject, Injector, Input, Output, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -8,7 +15,32 @@ import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
   standalone: true, // Assuming AppComponent is standalone
   imports: [CommonModule,FormsModule,MonacoEditorModule],
   templateUrl: './content-modal.component.html',
-  styleUrl: './content-modal.component.scss'
+  styleUrl: './content-modal.component.scss',
+  animations: [
+    trigger('modalAnimation',[
+      transition(':enter',[
+        style({transform: 'scale(0.8)',opacity: 0}),
+        animate('200ms ease-out',style({transform: 'scale(1)',opacity:1})),
+
+      ]),
+      transition(':leave',[
+        animate('150ms ease-in',style({transform: 'scale(0.8)',opacity: 0}))
+      ]),
+    ]),
+
+    trigger('minimizeAnimation', [
+      state('open', style({ transform: 'scale(1)', opacity: 1 })),
+      state('minimized', style({ transform: 'scale(0.3)', opacity: 0.5 })),
+      transition('open <=> minimized', animate('200ms ease-in-out')),
+    ]),
+
+    trigger('maximizeAnimation', [
+      state('normal', style({ transform: 'scale(1)' })),
+      state('maximized', style({ transform: 'scale(1)' })), // Optionally add transform
+      transition('normal <=> maximized', animate('250ms ease-in-out')),
+    ])
+
+  ]
 })
 export class ContentModalComponent implements AfterViewInit {
     @Input() title = 'Untitled';
