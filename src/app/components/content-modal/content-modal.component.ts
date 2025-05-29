@@ -10,10 +10,11 @@ import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, injec
 import { FormsModule } from '@angular/forms';
 import * as monaco from 'monaco-editor';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
+import { CalculatorComponent } from "../calculator/calculator.component";
 @Component({
   selector: 'app-content-modal',
   standalone: true, // Assuming AppComponent is standalone
-  imports: [CommonModule,FormsModule,MonacoEditorModule],
+  imports: [CommonModule, FormsModule, MonacoEditorModule, CalculatorComponent],
   templateUrl: './content-modal.component.html',
   styleUrl: './content-modal.component.scss',
   animations: [
@@ -47,6 +48,8 @@ export class ContentModalComponent implements AfterViewInit {
     @Input() content = '';
     @Input() zIndex = 100; // This will be applied via [style.zIndex] in the template
     @Input() id!: number;
+    @Input() componentName: 'editor' | 'calculator'|undefined = 'editor';
+
     @Output() close = new EventEmitter<number>();
     @Output() focus = new EventEmitter<number>();
     @Output() minimize = new EventEmitter<number>();

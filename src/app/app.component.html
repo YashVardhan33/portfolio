@@ -1,12 +1,22 @@
-<div  class="desktop">
-  <app-desktop-icon [label]="'AboutMe.md'" [icon]="'assets/icons/md.svg'" [onDoubleClick]="handleAboutMeDoubleClick"></app-desktop-icon>
+<div  class="desktop" >
+  <app-desktop-icon [label]="'AboutMe.txt'" [icon]="'assets/icons/txt.svg'" [onDoubleClick]="handleAboutMeDoubleClick"></app-desktop-icon>
 
-  <app-desktop-icon [label]="'Projects.json'" [icon]="'assets/icons/json.svg'" [onDoubleClick]="handleProjectsDoubleClick"></app-desktop-icon>
+  <app-desktop-icon [label]="'Skills.json'" [icon]="'assets/icons/json.svg'" [onDoubleClick]="handleSkillsDoubleClick"></app-desktop-icon>
+  <app-desktop-icon [label]="'Projects.md'" [icon]="'assets/icons/md.svg'" [onDoubleClick]="handleProjectsDoubleClick"></app-desktop-icon>
+  <app-desktop-icon [label]="'Calculator'" [icon]="'assets/icons/calc.svg'" [onDoubleClick]="handleCalculatorDoubleClick"></app-desktop-icon>
+
+  <app-desktop-icon [label]="'Position of Responsibility'" [icon]="'assets/icons/file.svg'" [onDoubleClick]="handlePoRDoubleClick"></app-desktop-icon>
+  <app-desktop-icon [label]="'Achievements'" [icon]="'assets/icons/java.svg'" [onDoubleClick]="handleAchievementDoubleClick"></app-desktop-icon>
+
 
 </div>
-<<ng-container *ngFor="let win of windowManager.windows$|async">
-      <app-content-modal *ngIf="!win.isMinimized" [title]="win.title" [content]="win.content" [id]="win.id" [zIndex]="win.zIndex" (close)="handleClose($event)" (focus)="handleFocus($event)"  (minimize)="handleMinimize($event)"></app-content-modal>
+<ng-container *ngFor="let win of windowManager.windows$|async">
+      <app-content-modal *ngIf="!win.isMinimized" [title]="win.title" [content]="win.content" [id]="win.id" [zIndex]="win.zIndex" [componentName]="win.componentName" (close)="handleClose($event)" (focus)="handleFocus($event)"  (minimize)="handleMinimize($event)"></app-content-modal>
 </ng-container>
-<app-taskbar [openWindows]="windowManager.windows" (openWindow)="handleRestore($event)" (startClicked)="toggleStartMenu()"
+
+<div *ngIf="startMenuOpen" class="start-menu-wrapper" #startMenuRef>
+    <app-start-menu (shutdown)="toggleStartMenu()"></app-start-menu>
+</div>
+
+<app-taskbar #taskbarRef [openWindows]="windowManager.windows" (openWindow)="handleRestore($event)" (startClicked)="toggleStartMenu()"
 ></app-taskbar>
-<app-start-menu *ngIf="startMenuOpen"></app-start-menu>

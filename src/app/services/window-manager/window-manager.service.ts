@@ -8,6 +8,7 @@ interface OpenWindow{
   zIndex: number;
   isMinimized: boolean;
   iconUrl?: string;
+  componentName? : 'editor'|'calculator';
 }
 
 
@@ -21,7 +22,7 @@ export class WindowManagerService {
     private windowsSubject = new BehaviorSubject<OpenWindow[]>([]);
     windows$ = this.windowsSubject.asObservable();
 
-    openWindow(title: string, filename: string, content: string,iconUrl: string = 'assets/icons/file.svg'){
+    openWindow(title: string, filename: string, content: string,iconUrl: string = 'assets/icons/file.svg',componentName: 'editor' | 'calculator' = 'editor'){
       const newWindow: OpenWindow = {
         id: this.nextId++,
         title,
@@ -30,6 +31,7 @@ export class WindowManagerService {
         zIndex: this.zCounter++,
         isMinimized : false,
         iconUrl,
+        componentName,
       };
 
       this.windows.push(newWindow);
