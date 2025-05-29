@@ -1,5 +1,9 @@
 <div class="modal"
+
 #modal
+[@modalAnimation]
+[@minimizeAnimation]="isMinimized?'minimized':'open'"
+[@maximizeAnimation]="isMaximized?'maximized':'normal'"
 [style.zIndex]="zIndex"
 (mousedown)="onModalMouseDown()"
 [style.left]="initialLeft"
@@ -16,7 +20,12 @@
     </div> <!-- Pass $event to stopPropagation -->
   </div>
   <div class="body" >
-    <ngx-monaco-editor [options]="editorOptions" [(ngModel)]="content" [style.height.px]="height-50" [style.width.px]="width" (onInit)="onEditorInit($event)"></ngx-monaco-editor>
+    <ng-container *ngIf="componentName==='editor'">
+      <ngx-monaco-editor [options]="editorOptions" [(ngModel)]="content" [style.height.px]="height-50" [style.width.px]="width" (onInit)="onEditorInit($event)"></ngx-monaco-editor>
+    </ng-container>
+    <ng-container *ngIf="componentName==='calculator'">
+      <app-calculator></app-calculator>
+    </ng-container>
 
   </div>
 
