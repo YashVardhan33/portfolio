@@ -17,5 +17,10 @@ export class StartMenuComponent {
     onCalculatorClick(){
       console.log('StartMenuComponent triggering calculator event');
       this.startService.triggerCalculatorClick();
+      this.shutdown.emit();
+    }
+
+    onShutdown(){
+      this.shutdown.emit();
     }
 }
