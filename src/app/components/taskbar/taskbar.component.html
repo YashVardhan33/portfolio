@@ -1,8 +1,6 @@
 <div class="taskbar">
-  <div class="start-button" (click)="toggleStartMenu()">
+  <div class="start-button" data-start-button (click)="onStartClick()">
     <img [src]="startIconUrl" class="icon"/>
-
-    <!-- <mat-icon>windows</mat-icon> -->
     Start
   </div>
 
@@ -15,10 +13,9 @@
   <div class="status-area">
     <mat-icon class="icon">wifi</mat-icon>
     <span>{{time}}
-      <!-- <div>{{time}}</div> -->
       <div>{{date}}</div>
     </span>
   </div>
-
 </div>
-<app-start-menu *ngIf="showStartMenu" (shutdown)="handleShutdown()"></app-start-menu>
+<!-- Remove this line completely -->
+<!-- <app-start-menu *ngIf="showStartMenu" (shutdown)="handleShutdown()"></app-start-menu> -->

@@ -164,31 +164,40 @@ closeStartMenu() {
 }
 
 
+// @HostListener('document:click', ['$event'])
+// onDocumentClick(event: MouseEvent) {
+//   const target = event.target as HTMLElement;
+//   const startMenuElement = document.querySelector('.start-menu-wrapper');
+//   if (this.startMenuOpen && startMenuElement && !startMenuElement.contains(target)) {
+//     console.log('Clicked outside Start Menu from AppComponent');
+//     this.startMenuOpen = false;
+//   }
+// }
 @HostListener('document:click', ['$event'])
 onDocumentClick(event: MouseEvent) {
+  if (!this.startMenuOpen) return;
+
   const target = event.target as HTMLElement;
-  const startMenuElement = document.querySelector('.start-menu-wrapper');
-  if (this.startMenuOpen && startMenuElement && !startMenuElement.contains(target)) {
-    console.log('Clicked outside Start Menu from AppComponent');
+
+  // Check if click is inside start menu
+  const startMenuElement = this.startMenuRef?.nativeElement;
+  const isInsideStartMenu = startMenuElement && startMenuElement.contains(target);
+
+  // Check if click is on start button
+  const startButton = document.querySelector('[data-start-button]');
+  const isStartButton = startButton && startButton.contains(target);
+
+  // Close menu if clicked outside both start menu and start button
+  if (!isInsideStartMenu && !isStartButton) {
+    console.log('Clicked outside Start Menu - closing');
     this.startMenuOpen = false;
   }
 }
 
-// @HostListener('document:click',['$event'])
-// onDocumentClick(event: MouseEvent){
-//   setTimeout(()=>{
-//     const target = event.target as HTMLElement;
-//   if(this.startMenuOpen&&this.startMenuRef&&!this.startMenuRef.nativeElement.contains(target)){
-//     this.startMenuOpen = false;
-//   }
-//   },0);
-// }
 
-  // constructor(
-  //   private portfolioData: PortfolioDataService
 
-  //   //public themeService: ThemeService;
-  // ){}
 
-  // title = 'portfolio-frontend';
+
+
+
 }
