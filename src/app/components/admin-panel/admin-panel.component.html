@@ -1,0 +1,103 @@
+<div class="admin-panel" *ngIf="isAuthenticated">
+  <div class="admin-header">
+    <h1>Portfolio Admin Panel</h1>
+    <button (click)="logout()" class="logout-btn">Logout</button>
+  </div>
+
+  <div class="admin-content">
+    <div class="add-section">
+      <h2>{{ editingItem ? 'Edit' : 'Add New' }} Portfolio Item</h2>
+      <form [formGroup]="itemForm" (ngSubmit)="saveItem()">
+        <div class="form-group">
+          <label>ID:</label>
+          <input formControlName="id" type="text" [disabled]="editingItem">
+        </div>
+
+        <div class="form-group">
+          <label>Label:</label>
+          <input formControlName="label" type="text">
+        </div>
+
+        <div class="form-group">
+          <label>Icon URL:</label>
+          <input formControlName="icon" type="text">
+        </div>
+
+        <div class="form-group">
+          <label>Type:</label>
+          <select formControlName="type">
+            <option value="about">About Me</option>
+            <option value="skills">Skills</option>
+            <option value="projects">Projects</option>
+            <option value="por">Experience</option>
+            <option value="achievements">Achievements</option>
+            <option value="calculator">Calculator</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Content:</label>
+          <textarea formControlName="content" rows="10"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Order:</label>
+          <input formControlName="order" type="number">
+        </div>
+
+        <div class="form-group">
+          <label>
+            <input formControlName="isActive" type="checkbox"> Active
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit">{{ editingItem ? 'Update' : 'Add' }} Item</button>
+          <button type="button" (click)="cancelEdit()" *ngIf="editingItem">Cancel</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="items-list">
+      <h2>Existing Portfolio Items</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Label</th>
+            <th>Type</th>
+            <th>Active</th>
+            <th>Order</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of portfolioItems">
+            <td>{{ item.label }}</td>
+            <td>{{ item.type }}</td>
+            <td>{{ item.isActive ? 'Yes' : 'No' }}</td>
+            <td>{{ item.order }}</td>
+            <td>
+              <button (click)="editItem(item)">Edit</button>
+              <button (click)="deleteItem(item._id)" class="delete-btn">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="login-form" *ngIf="!isAuthenticated">
+  <h2>Admin Login</h2>
+  <form [formGroup]="loginForm" (ngSubmit)="login()">
+    <div class="form-group">
+      <label>Username:</label>
+      <input formControlName="username" type="text">
+    </div>
+    <div class="form-group">
+      <label>Password:</label>
+      <input formControlName="password" type="password">
+    </div>
+    <button type="submit">Login</button>
+  </form>
+</div>

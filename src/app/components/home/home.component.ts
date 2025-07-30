@@ -1,19 +1,25 @@
+import { CommonModule } from '@angular/common';
 import { Component, ElementRef, HostListener, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AndroidApp } from './components/android-home/android-home.component';
-import { DeviceDetectionService } from './services/device-detection.service';
-import { StartMenuService } from './services/StartMenu/start-menu.service';
-import { WindowManagerService } from './services/window-manager/window-manager.service';
+import { DeviceDetectionService } from '../../services/device-detection.service';
+import { StartMenuService } from '../../services/StartMenu/start-menu.service';
+import { WindowManagerService } from '../../services/window-manager/window-manager.service';
+import { AndroidAppViewComponent } from '../android-app-view/android-app-view.component';
+import { AndroidApp, AndroidHomeComponent } from '../android-home/android-home.component';
+import { ContentModalComponent } from '../content-modal/content-modal.component';
+import { DesktopIconComponent } from '../desktop-icon/desktop-icon.component';
+import { StartMenuComponent } from '../start-menu/start-menu.component';
+import { TaskbarComponent } from '../taskbar/taskbar.component';
 
 @Component({
   standalone: true,
-  selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  selector: 'app-home',
+  imports: [TaskbarComponent, DesktopIconComponent, ContentModalComponent, CommonModule, StartMenuComponent, AndroidAppViewComponent, AndroidHomeComponent],
+  templateUrl: './home.component.html',
+  styleUrl: './home.component.scss'
 })
-export class AppComponent implements OnInit,OnDestroy {
+
+export class HomeComponent implements OnInit,OnDestroy {
   ////////////
   currentMobileApp: AndroidApp|null=null;
   public deviceService = inject(DeviceDetectionService);

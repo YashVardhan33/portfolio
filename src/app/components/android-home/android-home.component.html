@@ -1,0 +1,40 @@
+<div class="android-home">
+  <div class="status-bar">
+    <div class="status-left">
+      <span class="time">{{ time }}</span>
+    </div>
+    <div class="status-right">
+      <mat-icon>signal_cellular_4_bar</mat-icon>
+      <mat-icon>wifi</mat-icon>
+      <span class="battery">100%</span>
+      <mat-icon>battery_full</mat-icon>
+    </div>
+  </div>
+
+  <div class="wallpaper">
+    <div class="app-grid">
+      <div
+        *ngFor="let app of apps"
+        class="app-icon"
+        (click)="openApp(app)"
+      >
+        <div class="icon-container">
+          <img [src]="app.icon" [alt]="app.label">
+        </div>
+        <span class="app-label">{{ app.label }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="navigation-bar">
+    <button class="nav-button" (click)="goBack()" [disabled]="!canGoBack">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <button class="nav-button home-button" (click)="goHome()">
+      <mat-icon>home</mat-icon>
+    </button>
+    <button class="nav-button" (click)="showRecents()">
+      <mat-icon>crop_square</mat-icon>
+    </button>
+  </div>
+</div>
