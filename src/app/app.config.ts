@@ -1,3 +1,4 @@
+import { provideHttpClient } from '@angular/common/http';
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
@@ -8,7 +9,7 @@ const monacoConfig: NgxMonacoEditorConfig = {
   baseUrl: 'assets/monaco-editor/min/vs',
 }
 export const appConfig: ApplicationConfig = {
-  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes),provideMonacoEditor(monacoConfig),provideAnimations() ]
+  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes),provideMonacoEditor(monacoConfig),provideAnimations(), provideHttpClient() ]
 };
 
 

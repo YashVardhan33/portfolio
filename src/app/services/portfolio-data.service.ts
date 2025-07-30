@@ -1,27 +1,36 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
-import { About } from '../models/about.model';
-import { Project } from '../models/project.model';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PortfolioDataService {
-  private apiUrl = environment.apiUrl+'/portfolio';
+  private portfolioItemsSubject = new BehaviorSubject<any[]>([]);
+  public portfolioItems$ = this.portfolioItemsSubject.asObservable();
 
-  constructor(private http: HttpClient) { }
-
-  getAbout(): Observable<About> {
-    return this.http.get<About>(`${this.apiUrl}/about`);
+  constructor(private http: HttpClient) {
+    this.loadPortfolioItems();
   }
 
-  getProjects(): Observable<Project[]> {
-    return this.http.get<Project[]>(`${this.apiUrl}/projects`);
+  async loadPortfolioItems() {
+    try {
+      const items = await firstValueFrom(
+        this.http.get<any[]>('/api/portfolio/items')
+      );
+      this.portfolioItemsSubject.next(items);
+    } catch (error) {
+      console.error('Error loading portfolio items:', error);
+    }
   }
 
-  getSkills(): Observable<Project[]> {
-    return this.http.get<Project[]>(`${this.apiUrl}/projects`);
+  async getPortfolioItem(id: string): Promise<any> {
+    return firstValueFrom(
+      this.http.get(`/api/portfolio/${id}`)
+    );
+  }
+
+  getPortfolioItems(): any[] {
+    return this.portfolioItemsSubject.value;
   }
 }

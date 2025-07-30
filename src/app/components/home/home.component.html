@@ -1,4 +1,4 @@
-<!-- <div  *ngIf="!(deviceService.isMobile$|async)" class="desktop" >
+<div  *ngIf="!(deviceService.isMobile$|async)" class="desktop" >
   <app-desktop-icon [label]="'AboutMe.txt'" [icon]="'assets/icons/txt.svg'" [onDoubleClick]="handleAboutMeDoubleClick"></app-desktop-icon>
 
   <app-desktop-icon [label]="'Skills.json'" [icon]="'assets/icons/json.svg'" [onDoubleClick]="handleSkillsDoubleClick"></app-desktop-icon>
@@ -18,7 +18,7 @@
     <app-start-menu (shutdown)="toggleStartMenu()"></app-start-menu>
 </div>
 
-<app-taskbar #taskbarRef [openWindows]="windowManager.windows" (openWindow)="handleRestore($event)" (startClicked)="toggleStartMenu()"
+<app-taskbar *ngIf="!(deviceService.isMobile$|async)" #taskbarRef [openWindows]="windowManager.windows" (openWindow)="handleRestore($event)" (startClicked)="toggleStartMenu()"
 ></app-taskbar>
 
 
@@ -38,5 +38,4 @@
     (backPressed)="onMobileBack()"
     (homePressed)="onMobileHome()">
   </app-android-app-view>
-</div> -->
-<router-outlet></router-outlet>
+</div>

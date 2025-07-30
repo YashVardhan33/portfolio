@@ -1,0 +1,29 @@
+<div class="android-app" *ngIf="currentApp">
+  <div class="app-header">
+    <button class="back-button" (click)="onBack()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h2 class="app-title">{{ currentApp.label }}</h2>
+    <div class="header-actions">
+      <button class="action-button" (click)="onHome()">
+        <mat-icon>home</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="app-content">
+    <ng-container [ngSwitch]="currentApp.id">
+      <!-- Calculator -->
+      <div *ngSwitchCase="'calculator'" class="calculator-container">
+        <app-calculator></app-calculator>
+      </div>
+
+      <!-- Content Apps -->
+      <div *ngSwitchDefault class="content-container">
+        <div class="content-text">
+          {{ getContentForApp(currentApp.id) }}
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
