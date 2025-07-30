@@ -7,7 +7,7 @@ let client;
 let clientPromise;
 
 if (!process.env.MONGODB_URI) {
-  throw new Error('Please add your MongoDB URI to .env.local');
+  throw new Error('Please add your MongoDB URI to environment variables');
 }
 
 if (process.env.NODE_ENV === 'development') {
@@ -25,7 +25,12 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 export async function connectToDatabase() {
-  const client = await clientPromise;
-  const db = client.db('portfolio'); // Your database name
-  return { client, db };
+  try {
+    const client = await clientPromise;
+    const db = client.db('portfolio'); // Your database name
+    return { client, db };
+  } catch (error) {
+    console.error('Database connection error:', error);
+    throw error;
+  }
 }

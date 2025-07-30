@@ -8,9 +8,15 @@ export default async function handler(req, res) {
 
   const { username, password } = req.body;
 
-  // Simple authentication - you can enhance this
-  const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
+  // Validate environment variables
+  const ADMIN_USERNAME = process.env.ADMIN_USERNAME;
   const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH;
+  const JWT_SECRET = process.env.JWT_SECRET;
+
+  if (!ADMIN_USERNAME || !ADMIN_PASSWORD_HASH || !JWT_SECRET) {
+    console.error('Missing required environment variables');
+    return res.status(500).json({ message: 'Server configuration error' });
+  }
 
   if (username !== ADMIN_USERNAME) {
     return res.status(401).json({ message: 'Invalid credentials' });
@@ -24,7 +30,7 @@ export default async function handler(req, res) {
 
     const token = jwt.sign(
       { username },
-      process.env.JWT_SECRET || 'your-secret-key',
+      JWT_SECRET,
       { expiresIn: '24h' }
     );
 

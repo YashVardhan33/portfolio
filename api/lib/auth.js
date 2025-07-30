@@ -8,9 +8,16 @@ export function verifyToken(req) {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
+    const JWT_SECRET = process.env.JWT_SECRET;
+    if (!JWT_SECRET) {
+      console.error('JWT_SECRET not configured');
+      return null;
+    }
+
+    const decoded = jwt.verify(token, JWT_SECRET);
     return decoded;
   } catch (error) {
+    console.error('Token verification error:', error);
     return null;
   }
 }
