@@ -15,7 +15,7 @@
 </ng-container>
 
 <div *ngIf="startMenuOpen" class="start-menu-wrapper" #startMenuRef>
-    <app-start-menu (shutdown)="toggleStartMenu()"></app-start-menu>
+    <app-start-menu (shutdown)="toggleStartMenu()" (calculator)="handleCalculatorDoubleClick()"></app-start-menu>
 </div>
 
 <app-taskbar *ngIf="!(deviceService.isMobile$|async)" #taskbarRef [openWindows]="windowManager.windows" (openWindow)="handleRestore($event)" (startClicked)="toggleStartMenu()"
