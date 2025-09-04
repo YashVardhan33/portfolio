@@ -10,6 +10,7 @@ import { AdminService } from '../../services/admin.service';
   templateUrl: './admin-panel.component.html',
   styleUrl: './admin-panel.component.scss'
 })
+
 export class AdminPanelComponent implements OnInit {
   isAuthenticated = false;
   portfolioItems: any[] = [];
@@ -18,9 +19,13 @@ export class AdminPanelComponent implements OnInit {
   loginForm: FormGroup;
   itemForm: FormGroup;
 
+  public isLoading = false;
+  public message: string | null = null;
+  public messageType: 'success' | 'error' | null = null;
+
   constructor(
-    private fb: FormBuilder,
-    private adminService: AdminService
+    private readonly fb: FormBuilder,
+    private readonly adminService: AdminService
   ) {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
@@ -52,13 +57,21 @@ export class AdminPanelComponent implements OnInit {
 
   async login() {
     if (this.loginForm.valid) {
+      this.isLoading = true;
+      this.message = null;
       try {
         const result = await this.adminService.login(this.loginForm.value);
         localStorage.setItem('admin_token', result.token);
         this.isAuthenticated = true;
+        this.message = 'Login successful!';
+        this.messageType = 'success';
         this.loadPortfolioItems();
-      } catch (error) {
-        alert('Invalid credentials');
+      } catch (error: any) {
+        console.error('Login error:', error);
+        this.message = 'Invalid credentials';
+        this.messageType = 'error';
+      } finally {
+        this.isLoading = false;
       }
     }
   }
@@ -69,26 +82,50 @@ export class AdminPanelComponent implements OnInit {
   }
 
   async loadPortfolioItems() {
+    this.isLoading = true;
+    this.message = null;
     try {
       this.portfolioItems = await this.adminService.getPortfolioItems();
-    } catch (error) {
-      console.error('Error loading portfolio items:', error);
+    } catch (error: any) {
+      if (error.status === 401) {
+        this.logout();
+        this.message = 'Session expired. Please log in again.';
+        this.messageType = 'error';
+      } else {
+        this.message = 'Error loading portfolio items';
+        this.messageType = 'error';
+        console.error('Error loading portfolio items:', error);
+      }
+    } finally {
+      this.isLoading = false;
     }
   }
 
   async saveItem() {
     if (this.itemForm.valid) {
+      this.isLoading = true;
+      this.message = null;
       try {
         if (this.editingItem) {
           await this.adminService.updatePortfolioItem(this.editingItem._id, this.itemForm.value);
+          this.message = 'Item updated successfully!';
         } else {
           await this.adminService.createPortfolioItem(this.itemForm.value);
+          this.message = 'Item added successfully!';
         }
-
+        this.messageType = 'success';
         this.loadPortfolioItems();
         this.resetForm();
-      } catch (error) {
-        alert('Error saving item');
+      } catch (error: any) {
+        if (error.status === 401) {
+          this.logout();
+          this.message = 'Session expired. Please log in again.';
+        } else {
+          this.message = 'Error saving item';
+        }
+        this.messageType = 'error';
+      } finally {
+        this.isLoading = false;
       }
     }
   }
@@ -105,11 +142,23 @@ export class AdminPanelComponent implements OnInit {
 
   async deleteItem(itemId: string) {
     if (confirm('Are you sure you want to delete this item?')) {
+      this.isLoading = true;
+      this.message = null;
       try {
         await this.adminService.deletePortfolioItem(itemId);
+        this.message = 'Item deleted successfully!';
+        this.messageType = 'success';
         this.loadPortfolioItems();
-      } catch (error) {
-        alert('Error deleting item');
+      } catch (error: any) {
+        if (error.status === 401) {
+          this.logout();
+          this.message = 'Session expired. Please log in again.';
+        } else {
+          this.message = 'Error deleting item';
+        }
+        this.messageType = 'error';
+      } finally {
+        this.isLoading = false;
       }
     }
   }

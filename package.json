@@ -20,6 +20,7 @@
     "@angular/platform-browser": "^19.0.0",
     "@angular/platform-browser-dynamic": "^19.0.0",
     "@angular/router": "^19.0.0",
+    "@tailwindcss/postcss": "^4.1.12",
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "9.0.0",
     "mathjs": "^14.5.0",
@@ -27,8 +28,10 @@
     "mongodb": "6.0.0",
     "ngx-monaco-editor-v2": "^19.0.2",
     "portfolio-frontend": "file:",
+    "postcss": "^8.5.6",
     "prismjs": "^1.30.0",
     "rxjs": "~7.8.0",
+    "tailwindcss": "^4.1.12",
     "tslib": "^2.3.0",
     "uuid": "^11.1.0",
     "zone.js": "~0.15.0"

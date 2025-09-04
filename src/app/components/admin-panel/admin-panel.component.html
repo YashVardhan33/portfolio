@@ -1,31 +1,35 @@
 <div class="admin-panel" *ngIf="isAuthenticated">
   <div class="admin-header">
     <h1>Portfolio Admin Panel</h1>
-    <button (click)="logout()" class="logout-btn">Logout</button>
+  <button (click)="logout()" class="logout-btn" [attr.aria-label]="'Logout'">Logout</button>
+  </div>
+
+  <div *ngIf="message" class="admin-message" [ngClass]="messageType">
+    {{ message }}
   </div>
 
   <div class="admin-content">
     <div class="add-section">
       <h2>{{ editingItem ? 'Edit' : 'Add New' }} Portfolio Item</h2>
-      <form [formGroup]="itemForm" (ngSubmit)="saveItem()">
+  <form [formGroup]="itemForm" (ngSubmit)="saveItem()" [attr.aria-label]="'Portfolio Item Form'">
         <div class="form-group">
-          <label>ID:</label>
-          <input formControlName="id" type="text" [disabled]="editingItem">
+          <label for="item-id">ID:</label>
+          <input id="item-id" formControlName="id" type="text" [disabled]="editingItem" [attr.aria-label]="'ID'">
         </div>
 
         <div class="form-group">
-          <label>Label:</label>
-          <input formControlName="label" type="text">
+          <label for="item-label">Label:</label>
+          <input id="item-label" formControlName="label" type="text" [attr.aria-label]="'Label'">
         </div>
 
         <div class="form-group">
-          <label>Icon URL:</label>
-          <input formControlName="icon" type="text">
+          <label for="item-icon">Icon URL:</label>
+          <input id="item-icon" formControlName="icon" type="text" [attr.aria-label]="'Icon URL'">
         </div>
 
         <div class="form-group">
-          <label>Type:</label>
-          <select formControlName="type">
+          <label for="item-type">Type:</label>
+          <select id="item-type" formControlName="type" [attr.aria-label]="'Type'">
             <option value="about">About Me</option>
             <option value="skills">Skills</option>
             <option value="projects">Projects</option>
@@ -36,31 +40,35 @@
         </div>
 
         <div class="form-group">
-          <label>Content:</label>
-          <textarea formControlName="content" rows="10"></textarea>
+          <label for="item-content">Content:</label>
+          <textarea id="item-content" formControlName="content" rows="10" [attr.aria-label]="'Content'"></textarea>
         </div>
 
         <div class="form-group">
-          <label>Order:</label>
-          <input formControlName="order" type="number">
+          <label for="item-order">Order:</label>
+          <input id="item-order" formControlName="order" type="number" [attr.aria-label]="'Order'">
         </div>
 
         <div class="form-group">
           <label>
-            <input formControlName="isActive" type="checkbox"> Active
+            <input formControlName="isActive" type="checkbox" [attr.aria-label]="'Active'"> Active
           </label>
         </div>
 
         <div class="form-actions">
-          <button type="submit">{{ editingItem ? 'Update' : 'Add' }} Item</button>
-          <button type="button" (click)="cancelEdit()" *ngIf="editingItem">Cancel</button>
+          <button type="submit" [disabled]="itemForm.invalid || isLoading" [attr.aria-label]="editingItem ? 'Update Item' : 'Add Item'">
+            <span *ngIf="isLoading" class="spinner"></span>
+            {{ editingItem ? 'Update' : 'Add' }} Item
+          </button>
+          <button type="button" (click)="cancelEdit()" *ngIf="editingItem" [attr.aria-label]="'Cancel Edit'">Cancel</button>
         </div>
       </form>
     </div>
 
     <div class="items-list">
       <h2>Existing Portfolio Items</h2>
-      <table>
+      <div *ngIf="isLoading" class="loading-indicator">Loading...</div>
+      <table *ngIf="!isLoading">
         <thead>
           <tr>
             <th>Label</th>
@@ -77,8 +85,8 @@
             <td>{{ item.isActive ? 'Yes' : 'No' }}</td>
             <td>{{ item.order }}</td>
             <td>
-              <button (click)="editItem(item)">Edit</button>
-              <button (click)="deleteItem(item._id)" class="delete-btn">Delete</button>
+              <button (click)="editItem(item)" [attr.aria-label]="'Edit ' + item.label">Edit</button>
+              <button (click)="deleteItem(item._id)" class="delete-btn" [attr.aria-label]="'Delete ' + item.label">Delete</button>
             </td>
           </tr>
         </tbody>
@@ -89,15 +97,18 @@
 
 <div class="login-form" *ngIf="!isAuthenticated">
   <h2>Admin Login</h2>
-  <form [formGroup]="loginForm" (ngSubmit)="login()">
+  <form [formGroup]="loginForm" (ngSubmit)="login()" [attr.aria-label]="'Admin Login Form'">
     <div class="form-group">
-      <label>Username:</label>
-      <input formControlName="username" type="text">
+      <label for="login-username">Username:</label>
+  <input id="login-username" formControlName="username" type="text" [attr.aria-label]="'Username'">
     </div>
     <div class="form-group">
-      <label>Password:</label>
-      <input formControlName="password" type="password">
+      <label for="login-password">Password:</label>
+  <input id="login-password" formControlName="password" type="password" [attr.aria-label]="'Password'">
     </div>
-    <button type="submit">Login</button>
+    <button type="submit" [disabled]="loginForm.invalid || isLoading" [attr.aria-label]="'Login'">
+      <span *ngIf="isLoading" class="spinner"></span>
+      Login
+    </button>
   </form>
 </div>
