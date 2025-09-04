@@ -1,7 +1,7 @@
 <div class="admin-panel" *ngIf="isAuthenticated">
   <div class="admin-header">
     <h1>Portfolio Admin Panel</h1>
-  <button (click)="logout()" class="logout-btn" [attr.aria-label]="'Logout'">Logout</button>
+    <button (click)="logout()" class="logout-btn" [attr.aria-label]="'Logout'">Logout</button>
   </div>
 
   <div *ngIf="message" class="admin-message" [ngClass]="messageType">
@@ -11,24 +11,33 @@
   <div class="admin-content">
     <div class="add-section">
       <h2>{{ editingItem ? 'Edit' : 'Add New' }} Portfolio Item</h2>
-  <form [formGroup]="itemForm" (ngSubmit)="saveItem()" [attr.aria-label]="'Portfolio Item Form'">
+      <form [formGroup]="itemForm" (ngSubmit)="saveItem()" [attr.aria-label]="'Portfolio Item Form'">
         <div class="form-group">
-          <label for="item-id">ID:</label>
+          <label for="item-id">ID: <span class="required">*</span></label>
           <input id="item-id" formControlName="id" type="text" [disabled]="editingItem" [attr.aria-label]="'ID'">
+          <div *ngIf="itemForm.get('id')?.invalid && itemForm.get('id')?.touched" class="error-message">
+            ID is required
+          </div>
         </div>
 
         <div class="form-group">
-          <label for="item-label">Label:</label>
+          <label for="item-label">Label: <span class="required">*</span></label>
           <input id="item-label" formControlName="label" type="text" [attr.aria-label]="'Label'">
+          <div *ngIf="itemForm.get('label')?.invalid && itemForm.get('label')?.touched" class="error-message">
+            Label is required
+          </div>
         </div>
 
         <div class="form-group">
-          <label for="item-icon">Icon URL:</label>
+          <label for="item-icon">Icon URL: <span class="required">*</span></label>
           <input id="item-icon" formControlName="icon" type="text" [attr.aria-label]="'Icon URL'">
+          <div *ngIf="itemForm.get('icon')?.invalid && itemForm.get('icon')?.touched" class="error-message">
+            Icon URL is required
+          </div>
         </div>
 
         <div class="form-group">
-          <label for="item-type">Type:</label>
+          <label for="item-type">Type: <span class="required">*</span></label>
           <select id="item-type" formControlName="type" [attr.aria-label]="'Type'">
             <option value="about">About Me</option>
             <option value="skills">Skills</option>
@@ -40,13 +49,19 @@
         </div>
 
         <div class="form-group">
-          <label for="item-content">Content:</label>
+          <label for="item-content">Content: <span class="required">*</span></label>
           <textarea id="item-content" formControlName="content" rows="10" [attr.aria-label]="'Content'"></textarea>
+          <div *ngIf="itemForm.get('content')?.invalid && itemForm.get('content')?.touched" class="error-message">
+            Content is required
+          </div>
         </div>
 
         <div class="form-group">
-          <label for="item-order">Order:</label>
+          <label for="item-order">Order: <span class="required">*</span></label>
           <input id="item-order" formControlName="order" type="number" [attr.aria-label]="'Order'">
+          <div *ngIf="itemForm.get('order')?.invalid && itemForm.get('order')?.touched" class="error-message">
+            Order is required
+          </div>
         </div>
 
         <div class="form-group">
@@ -67,26 +82,40 @@
 
     <div class="items-list">
       <h2>Existing Portfolio Items</h2>
-      <div *ngIf="isLoading" class="loading-indicator">Loading...</div>
-      <table *ngIf="!isLoading">
+      <div *ngIf="isLoading" class="loading-indicator">
+        <span class="spinner"></span>
+        Loading portfolio items...
+      </div>
+      <div *ngIf="!isLoading && portfolioItems.length === 0" class="empty-state">
+        <p>No portfolio items found. Add your first item using the form above.</p>
+      </div>
+      <table *ngIf="!isLoading && portfolioItems.length > 0" role="table">
         <thead>
-          <tr>
-            <th>Label</th>
-            <th>Type</th>
-            <th>Active</th>
-            <th>Order</th>
-            <th>Actions</th>
+          <tr role="row">
+            <th role="columnheader">Label</th>
+            <th role="columnheader">Type</th>
+            <th role="columnheader">Active</th>
+            <th role="columnheader">Order</th>
+            <th role="columnheader">Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of portfolioItems">
-            <td>{{ item.label }}</td>
-            <td>{{ item.type }}</td>
-            <td>{{ item.isActive ? 'Yes' : 'No' }}</td>
-            <td>{{ item.order }}</td>
-            <td>
-              <button (click)="editItem(item)" [attr.aria-label]="'Edit ' + item.label">Edit</button>
-              <button (click)="deleteItem(item._id)" class="delete-btn" [attr.aria-label]="'Delete ' + item.label">Delete</button>
+          <tr *ngFor="let item of portfolioItems; trackBy: trackByItemId" role="row">
+            <td role="gridcell">{{ item.label }}</td>
+            <td role="gridcell">{{ item.type }}</td>
+            <td role="gridcell">
+              <span class="status-badge" [class.active]="item.isActive" [class.inactive]="!item.isActive">
+                {{ item.isActive ? 'Yes' : 'No' }}
+              </span>
+            </td>
+            <td role="gridcell">{{ item.order }}</td>
+            <td role="gridcell" class="actions-cell">
+              <button (click)="editItem(item)" class="btn-edit" [attr.aria-label]="'Edit ' + item.label">
+                Edit
+              </button>
+              <button (click)="deleteItem(item._id)" class="delete-btn" [attr.aria-label]="'Delete ' + item.label">
+                Delete
+              </button>
             </td>
           </tr>
         </tbody>
@@ -99,12 +128,18 @@
   <h2>Admin Login</h2>
   <form [formGroup]="loginForm" (ngSubmit)="login()" [attr.aria-label]="'Admin Login Form'">
     <div class="form-group">
-      <label for="login-username">Username:</label>
-  <input id="login-username" formControlName="username" type="text" [attr.aria-label]="'Username'">
+      <label for="login-username">Username: <span class="required">*</span></label>
+      <input id="login-username" formControlName="username" type="text" [attr.aria-label]="'Username'">
+      <div *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched" class="error-message">
+        Username is required
+      </div>
     </div>
     <div class="form-group">
-      <label for="login-password">Password:</label>
-  <input id="login-password" formControlName="password" type="password" [attr.aria-label]="'Password'">
+      <label for="login-password">Password: <span class="required">*</span></label>
+      <input id="login-password" formControlName="password" type="password" [attr.aria-label]="'Password'">
+      <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error-message">
+        Password is required
+      </div>
     </div>
     <button type="submit" [disabled]="loginForm.invalid || isLoading" [attr.aria-label]="'Login'">
       <span *ngIf="isLoading" class="spinner"></span>

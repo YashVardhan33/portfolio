@@ -87,15 +87,7 @@ export class AdminPanelComponent implements OnInit {
     try {
       this.portfolioItems = await this.adminService.getPortfolioItems();
     } catch (error: any) {
-      if (error.status === 401) {
-        this.logout();
-        this.message = 'Session expired. Please log in again.';
-        this.messageType = 'error';
-      } else {
-        this.message = 'Error loading portfolio items';
-        this.messageType = 'error';
-        console.error('Error loading portfolio items:', error);
-      }
+      this.handleApiError(error, 'load');
     } finally {
       this.isLoading = false;
     }
@@ -116,32 +108,63 @@ export class AdminPanelComponent implements OnInit {
         this.messageType = 'success';
         this.loadPortfolioItems();
         this.resetForm();
+        // Auto-dismiss success message after 3 seconds
+        setTimeout(() => {
+          if (this.messageType === 'success') {
+            this.message = null;
+          }
+        }, 3000);
       } catch (error: any) {
-        if (error.status === 401) {
-          this.logout();
-          this.message = 'Session expired. Please log in again.';
-        } else {
-          this.message = 'Error saving item';
-        }
-        this.messageType = 'error';
+        this.handleApiError(error, this.editingItem ? 'update' : 'add');
       } finally {
         this.isLoading = false;
       }
+    } else {
+      this.message = 'Please fill in all required fields correctly.';
+      this.messageType = 'error';
+      this.markFormGroupTouched(this.itemForm);
     }
+  }
+
+  private handleApiError(error: any, operation: string) {
+    if (error.status === 401) {
+      this.logout();
+      this.message = 'Session expired. Please log in again.';
+    } else if (error.status === 0) {
+      this.message = 'Network error: Could not connect to the server. Please check your connection.';
+    } else if (error.status === 500) {
+      this.message = 'Server error: Please try again later.';
+    } else if (error.error?.message) {
+      this.message = `Error: ${error.error.message}`;
+    } else {
+      const operationMap: { [key: string]: string } = {
+        'add': 'Failed to add item. Please try again.',
+        'update': 'Failed to update item. Please try again.',
+        'delete': 'Failed to delete item. Please try again.',
+        'load': 'Failed to load portfolio items. Please try again.'
+      };
+      this.message = operationMap[operation] || 'An error occurred. Please try again.';
+    }
+    this.messageType = 'error';
+    console.error(`Error ${operation}ing item:`, error);
   }
 
   editItem(item: any) {
     this.editingItem = item;
     this.itemForm.patchValue(item);
+    this.itemForm.get('id')?.disable();
+    this.message = null; // Clear any previous messages
   }
 
   cancelEdit() {
     this.editingItem = null;
     this.resetForm();
+    this.message = null; // Clear any previous messages
   }
 
   async deleteItem(itemId: string) {
-    if (confirm('Are you sure you want to delete this item?')) {
+    const confirmMessage = 'Are you sure you want to delete this item? This action cannot be undone.';
+    if (confirm(confirmMessage)) {
       this.isLoading = true;
       this.message = null;
       try {
@@ -149,14 +172,14 @@ export class AdminPanelComponent implements OnInit {
         this.message = 'Item deleted successfully!';
         this.messageType = 'success';
         this.loadPortfolioItems();
+        // Auto-dismiss success message after 3 seconds
+        setTimeout(() => {
+          if (this.messageType === 'success') {
+            this.message = null;
+          }
+        }, 3000);
       } catch (error: any) {
-        if (error.status === 401) {
-          this.logout();
-          this.message = 'Session expired. Please log in again.';
-        } else {
-          this.message = 'Error deleting item';
-        }
-        this.messageType = 'error';
+        this.handleApiError(error, 'delete');
       } finally {
         this.isLoading = false;
       }
@@ -169,6 +192,19 @@ export class AdminPanelComponent implements OnInit {
       order: 0,
       isActive: true
     });
+    this.itemForm.get('id')?.enable(); // Re-enable ID field for new items
     this.editingItem = null;
+    this.message = null; // Clear any previous messages
+  }
+
+  private markFormGroupTouched(formGroup: FormGroup) {
+    Object.keys(formGroup.controls).forEach(key => {
+      const control = formGroup.get(key);
+      control?.markAsTouched();
+    });
+  }
+
+  trackByItemId(index: number, item: any): string {
+    return item._id ?? item.id ?? index.toString();
   }
 }
